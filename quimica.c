@@ -12,10 +12,10 @@ typedef struct Item {
   int id;
 } Item;
 
-int proibido(Item *items, int curIndex, int n, int bound) {
+int proibido(Item *items, int curIndex, int n) {
   int i;
   for (i=0; i<curIndex; i++) {
-    if ((items[i].id != items[curIndex].id) && (items[i].select || bound))
+    if ((items[i].id != items[curIndex].id) && items[i].select)
       if (items[i].pairs[items[curIndex].id] == 1)
         return 1;
   }
@@ -25,11 +25,11 @@ int proibido(Item *items, int curIndex, int n, int bound) {
 void findBound(int W, Item *items, int curIndex, int n) {
   int i;
   for (i=curIndex; i<n; i++) {
-    if (W-items[i].weight >= 0 && !proibido(items, i, n, 1)) {  // adiciona os itens mais valiosos enquanto cabem na mochila
+    if (W-items[i].weight >= 0) {  // adiciona os itens mais valiosos enquanto cabem na mochila
       items[curIndex].bound += items[i].value;
       W -= items[i].weight;
     }
-    else if (!proibido(items, i, n, 1)) {  // adiciona uma fração do valor do item se não couber inteiro na mochila
+    else {  // adiciona uma fração do valor do item se não couber inteiro na mochila
       items[curIndex].bound += (W * items[i].value) / items[i].weight;
       break;
     }
@@ -60,7 +60,7 @@ float BranchNBound(int W, Item *items, int i, int n, int *nodes, float *bestProf
     for (int j=i+1; j<n; j++) // apaga seleção de possíveis itens posteriores
       items[j].select=0;
 
-    if (W-items[i].weight >= 0 && !proibido(items, i, n, 0)) {  // adiciona o valor do último item se não exceder a capacidade da mochila
+    if (W-items[i].weight >= 0 && !proibido(items, i, n)) {  // adiciona o valor do último item se não exceder a capacidade da mochila
       items[i].select = 1;
       *bestProfit = currentProfit + items[i].value;
       return *bestProfit;
@@ -80,7 +80,7 @@ float BranchNBound(int W, Item *items, int i, int n, int *nodes, float *bestProf
   // seleciona o item se não for proibido
   items[i].select = 1;
   float esq;
-  if (!proibido(items, i, n, 0))
+  if (!proibido(items, i, n))
     esq = BranchNBound(W-items[i].weight, items, i+1, n, nodes, bestProfit, currentProfit+items[i].value);
   else esq = -1;
 
