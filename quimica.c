@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 // Estrutura do item para guardar valor, peso e valor por peso do item
 typedef struct Item {
@@ -128,6 +129,10 @@ int main()
   int W, n, m;
   
   scanf("%d %d %d", &n, &m, &W); // lê a quantidade de itens e o tamanho da mochila
+
+  clock_t t;
+  t = clock();
+
   Item *items = (Item *) malloc(sizeof(Item)*n);  // inicializa vetor de itens
   for (int i=0; i<n; i++)
     items[i].pairs = calloc(n, sizeof(int));  // inicializa vetores de pares proibidos
@@ -173,8 +178,11 @@ int main()
   int nodes=0;
 
   printf("%g\n", BranchNBound(W, items, 0, n, &nodes, &bestProfit, 0));
+  t = clock() - t;
   printBnBSolution(items, n, W, bestProfit);
-  printf("Número de nós: %d\n", nodes);
+  double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds
+  fprintf(stderr, "Número de nós: %d\n", nodes);
+  fprintf(stderr, "Tempo: %f segundos\n", time_taken);
 
   free(items);
 
