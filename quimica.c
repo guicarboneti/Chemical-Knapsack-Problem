@@ -58,10 +58,9 @@ float BranchNBound(int W, Item *items, int i, int n, int *nodes, float *bestProf
 
   // retorna a melhor solução
   if (i+1==n || W == 0) {
-    for (int j=i+1; j<n; j++) // apaga seleção de possíveis itens posteriores
-      items[j].select=0;
-
     if (W-items[i].weight >= 0 && !proibido(items, i, n)) {  // adiciona o valor do último item se não exceder a capacidade da mochila
+      for (int j=i+1; j<n; j++) // apaga seleção de possíveis itens posteriores
+        items[j].select=0;
       items[i].select = 1;
       *bestProfit = currentProfit + items[i].value;
       return *bestProfit;
@@ -69,6 +68,8 @@ float BranchNBound(int W, Item *items, int i, int n, int *nodes, float *bestProf
     else {
       items[i].select = 0;
       if (currentProfit > *bestProfit) {
+        for (int j=i+1; j<n; j++) // apaga seleção de possíveis itens posteriores
+          items[j].select=0;
         *bestProfit = currentProfit;
         return *bestProfit;
       } else return -1;
