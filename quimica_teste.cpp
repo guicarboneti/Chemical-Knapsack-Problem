@@ -81,7 +81,7 @@ double bound (int pos, int espaco) {
 }
 
 void brach_and_bound (int pos, int peso, int valor, vector<int> &mochila) {
-    if (pos >= n) {
+    if (pos >= (n-1)) {
         return;
     }
 
