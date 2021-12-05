@@ -67,13 +67,15 @@ double bound (int pos, int espaco) {
     // cout << "Compute bound" << endl;
 
     double soma;
-    while (espaco - itens[pos].peso > 0 && pos < n) {
+    while ((espaco - itens[pos].peso) > 0 && pos < n) {
         espaco -= itens[pos].peso;
         soma += itens[pos].valor;
         pos++;
     }
 
-    soma += ((double) espaco) / itens[pos].peso * itens[pos].valor;
+    if (pos < n) {
+        soma += ((double) espaco) / itens[pos].peso * itens[pos].valor;
+    }
 
     return soma;
 }
@@ -92,7 +94,7 @@ void brach_and_bound (int pos, int peso, int valor, vector<int> &mochila) {
 
     if (valor > melhor_valor) {
         // cout << "best: " << valor << endl;
-        cout << "Trocou mochila" << endl;
+        // cout << "Trocou mochila" << endl;
         melhor_valor = valor;
         melhor_mochila = mochila;
         // cout_mochila(mochila);
@@ -168,7 +170,7 @@ int main() {
 
     cerr << "Numero de nós: " << nodes << endl; 
     chrono::steady_clock::time_point end = chrono::steady_clock::now();
-    cerr << "Tempo: " << chrono::duration_cast<chrono::microseconds>(end - begin).count() << " microsegundos" << endl;
+    cerr << "Tempo: " << (chrono::duration_cast<chrono::microseconds>(end - begin).count() / 1000.0)  << " milisegundos" << endl;
 
     return 0;
 }
