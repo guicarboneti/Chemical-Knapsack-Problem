@@ -81,16 +81,13 @@ double bound (int pos, int espaco) {
 }
 
 void brach_and_bound (int pos, int peso, int valor, vector<int> &mochila) {
-    if (pos >= (n-1)) {
-        return;
-    }
-
     // cout_mochila(mochila);
 
     pos++;
-    Item item = itens[pos];
-
     nodes++;
+
+    // cout << pos << endl;
+    // cout_mochila(mochila);
 
     if (valor > melhor_valor) {
         // cout << "best: " << valor << endl;
@@ -99,6 +96,14 @@ void brach_and_bound (int pos, int peso, int valor, vector<int> &mochila) {
         melhor_mochila = mochila;
         // cout_mochila(mochila);
     }
+
+    if (pos >= n) {
+        return;
+    }
+
+    Item item = itens[pos];
+
+    // cout << "peso: " << peso + item.peso << esp << c << endl;
 
     if (peso + item.peso <= c && !proibido(item.id, mochila)) {
         mochila.push_back(item.id);
@@ -157,6 +162,10 @@ int main() {
     // }
 
     sort(itens.begin(), itens.end(), greater<Item>());
+    
+    // for (int i = 0; i < itens.size(); i++) {
+    //     cout << i << ": " << itens[i].valor << esp << itens[i].peso << esp << itens[i].id << endl;
+    // }
 
     vector<int> mochila;
     brach_and_bound(-1, 0, 0, mochila);
